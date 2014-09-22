@@ -1,0 +1,1 @@
+Feature: Collect events and execute at the next event
