@@ -67,8 +67,8 @@ An action is a unit of work that occurs during a period. An action that occurs d
 an interruptable period causes the action to be executed and the era ended. Any actions
 queued at the next epoch are discarded.
 
-## Configuration
+## Backlog
+- Define requirements and create acceptance tests
 
-```
-consecution.
-```
+## Version History
+- 1.0.0 In development
