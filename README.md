@@ -1,6 +1,6 @@
 # Consecution
 
-Chained and interruptible events in Javascript
+Chained and interruptable events in Javascript
 
 ## Purpose
 
@@ -68,7 +68,9 @@ an interruptable period causes the action to be executed and the era ended. Any 
 queued at the next epoch are discarded.
 
 ## Backlog
-- Define requirements and create acceptance tests
+- Add support for collecting epochs
+- Add support for interruptable periods
+- Add completion hook to end of era
 
 ## Version History
-- 1.0.0 In development
+- 1.0.0 Add support for collecting epochs
