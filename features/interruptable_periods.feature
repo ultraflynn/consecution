@@ -1,1 +1,1 @@
-Feature: Allow a chain of events to be interrupted
+Feature: Interrupt a period and execute action

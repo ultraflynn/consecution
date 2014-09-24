@@ -1,1 +1,1 @@
-Feature: Collect events and execute at the next event
+Feature: Collect actions at the next epoch and then execute together

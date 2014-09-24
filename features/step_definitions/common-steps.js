@@ -1,7 +1,7 @@
 var Consecution = require("../../lib/consecution");
 
-var chaining = function chaining() {
+var commonSteps = function CommonSteps() {
 
 };
 
-module.exports = chaining;
+module.exports = commonSteps;

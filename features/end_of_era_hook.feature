@@ -1,1 +1,1 @@
-Feature: Allow a chain of events to be interrupted
+Feature: Trigger hook at end of an era

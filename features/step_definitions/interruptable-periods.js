@@ -1,7 +1,7 @@
 var Consecution = require("../../lib/consecution");
 
-var commonSteps = function CommonSteps() {
+var interruptablePeriods = function InterruptablePeriods() {
 
 };
 
-module.exports = commonSteps;
+module.exports = interruptablePeriods;
