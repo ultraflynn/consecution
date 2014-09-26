@@ -2,11 +2,25 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
 
+    notify: {
+      jasmine_node: {
+        options: {
+          title: "Unit tests complete"
+        }
+      },
+
+      cucumberjs: {
+        options: {
+          title: "Acceptance tests complete"
+        }
+      }
+    },
+
     watch: {
       unit: {
         files: [
-          "index.js", "lib/*.js", "lib/consecution/*.js",
-          "spec/**/*.js"
+          "lib/*.js", "lib/consecution/*.js",
+          "spec/*.js", "spec/**/*.js"
         ],
         tasks: ["jasmine_node"]
       },
@@ -47,8 +61,8 @@ module.exports = function(grunt) {
 
   require("matchdep").filterDev(["grunt-*", "!grunt-cli"]).forEach(grunt.loadNpmTasks);
 
-  grunt.registerTask("default", ["unit"]);
+  grunt.registerTask("default", ["test"]);
   grunt.registerTask("test", ["jasmine_node", "cucumberjs"]);
-  grunt.registerTask("unit", ["watch:unit"]);
-  grunt.registerTask("acceptance", ["watch:acceptance"]);
+  grunt.registerTask("unit", ["watch:unit", "notify:unit"]);
+  grunt.registerTask("acceptance", ["watch:acceptance", "notify:acceptance"]);
 };

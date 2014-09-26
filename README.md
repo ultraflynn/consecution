@@ -56,6 +56,10 @@ actions queued at the epoch are discarded.
 
 By default the start of an era is also an epoch.
 
+Epochs can be added in all standard time formats, i.e. millis, seconds, minutes, etc.
+There are specified as "1000ms", "1.5s", "5m" and so on. If a time specifier is omitted
+(e.g. "100") then millis is assumed.
+
 ## Period
 
 A period is the space between two epochs. Periods can be marked as interruptable. Actions
