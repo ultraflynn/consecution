@@ -28,7 +28,7 @@ module.exports = function(grunt) {
       acceptance: {
         files: [
           "index.js", "lib/*.js", "lib/consecution/*.js",
-          "spec/**/*.js", "features/*.feature", "features/step_definitions/*.js"
+          "features/*.feature", "features/step_definitions/*.js"
         ],
         tasks: ["cucumberjs"]
       }
