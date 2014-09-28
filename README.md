@@ -71,9 +71,7 @@ An action is a unit of work that occurs during a period. An action that occurs d
 an interruptible period causes the action to be executed and the era ended. Any actions
 queued at the next epoch are discarded.
 
-## Backlog
-- Add completion hook to end of era
-
 ## Version History
 - 1.0.0 Add support for collecting epochs
 - 1.0.1 Add support for interruptible periods
+- 1.0.2 Add completion hook to end of era
