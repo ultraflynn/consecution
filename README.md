@@ -1,6 +1,6 @@
 # Consecution
 
-Chained and interruptible events in Javascript
+Chained and interruptable events in Javascript
 
 ## Purpose
 
@@ -56,6 +56,10 @@ actions queued at the epoch are discarded.
 
 By default the start of an era is also an epoch.
 
+Epochs can be added in all standard time formats, i.e. millis, seconds, minutes, etc.
+There are specified as "1000ms", "1.5s", "5m" and so on. If a time specifier is omitted
+(e.g. "100") then millis is assumed.
+
 ## Period
 
 A period is the space between two epochs. Periods can be marked as interruptable. Actions
@@ -68,7 +72,9 @@ an interruptable period causes the action to be executed and the era ended. Any 
 queued at the next epoch are discarded.
 
 ## Backlog
-- Define requirements and create acceptance tests
+- Add support for collecting epochs
+- Add support for interruptable periods
+- Add completion hook to end of era
 
 ## Version History
-- 1.0.0 In development
+- 1.0.0 Add support for collecting epochs

@@ -1,1 +1,0 @@
-Feature: Allow a chain of events to be interrupted
