@@ -11,14 +11,14 @@ var commonSteps = function CommonSteps() {
     callback();
   });
 
-  this.Given(/^an interruptable epoch is added at "([^"]*)"$/, function(millis, callback) {
+  this.Given(/^an interruptible epoch is added at "([^"]*)"$/, function(millis, callback) {
     var epoch = parseInt(millis);
     if (epoch > lastEpoch) {
       lastEpoch = epoch;
     }
     config.push({
       epoch: epoch,
-      interruptable: true
+      interruptible: true
     });
     callback();
   });

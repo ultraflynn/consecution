@@ -1,6 +1,6 @@
 # Consecution
 
-Chained and interruptable events in Javascript
+Chained and interruptible events in Javascript
 
 ## Purpose
 
@@ -45,12 +45,12 @@ a clean interface to these event points and allowing you to define what happens 
 
 An era has defined start point. Epochs are added to an era and the final epoch marks
 the end of the era. Once started an era will only end if an action occurs during an
-interruptable period, or if the final epoch is reached.
+interruptible period, or if the final epoch is reached.
 
 ## Epoch
 
 An epoch is a point in time where actions get run. Two epochs cannot share the same
-point in time. An epoch can be marked as being interruptable which means if an action
+point in time. An epoch can be marked as being interruptible which means if an action
 occurs in the period before the epoch that action is executed and the era ended. Any
 actions queued at the epoch are discarded.
 
@@ -62,13 +62,13 @@ There are specified as "1000ms", "1.5s", "5m" and so on. If a time specifier is 
 
 ## Period
 
-A period is the space between two epochs. Periods can be marked as interruptable. Actions
-added to a period not marked as interruptable will be executed at the next epoch.
+A period is the space between two epochs. Periods can be marked as interruptible. Actions
+added to a period not marked as interruptible will be executed at the next epoch.
 
 ## Action
 
 An action is a unit of work that occurs during a period. An action that occurs during
-an interruptable period causes the action to be executed and the era ended. Any actions
+an interruptible period causes the action to be executed and the era ended. Any actions
 queued at the next epoch are discarded.
 
 ## Backlog
@@ -76,4 +76,4 @@ queued at the next epoch are discarded.
 
 ## Version History
 - 1.0.0 Add support for collecting epochs
-- 1.0.1 Add support for interruptable periods
+- 1.0.1 Add support for interruptible periods
