@@ -8,11 +8,15 @@ module.exports = {
     jasmine.Clock.useMock();
   },
 
-  startConsecution: function(epochs) {
+  startConsecution: function(epochs, interruptable) {
     var i, max = epochs.length, config = [];
+    interruptable = interruptable ||
+        Array.apply(null, new Array(epochs.length)).map(Boolean.prototype.valueOf, false);
+
     for (i = 0; i < max; i++) {
       config.push({
-        epoch: epochs[i]
+        epoch: epochs[i],
+        interruptable: interruptable[i]
       });
     }
     Consecution.initConfig(config);
@@ -42,5 +46,9 @@ module.exports = {
     for (i = 0; i < max; i++) {
       expect(firedActions.hasOwnProperty(names[i])).toBe(true);
     }
+  },
+
+  checkActionHasFired: function(name) {
+    expect(firedActions.hasOwnProperty(name)).toBe(true);
   }
 };
