@@ -1,6 +1,6 @@
 var Test = require("./test-utils");
 
-describe("interruptable periods", function() {
+describe("interruptible periods", function() {
   beforeEach(function() {
     Test.reset();
   });

@@ -8,15 +8,15 @@ module.exports = {
     jasmine.Clock.useMock();
   },
 
-  startConsecution: function(epochs, interruptable) {
+  startConsecution: function(epochs, interruptible) {
     var i, max = epochs.length, config = [];
-    interruptable = interruptable ||
+    interruptible = interruptible ||
         Array.apply(null, new Array(epochs.length)).map(Boolean.prototype.valueOf, false);
 
     for (i = 0; i < max; i++) {
       config.push({
         epoch: epochs[i],
-        interruptable: interruptable[i]
+        interruptible: interruptible[i]
       });
     }
     Consecution.initConfig(config);
