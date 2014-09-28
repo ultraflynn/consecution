@@ -1,61 +1,82 @@
 var Consecution = require("../../lib/consecution");
 
 var commonSteps = function CommonSteps() {
-  var config = [], actions = {};
+  var config, actions, lastEpoch, start, tolerance = 50;
+
+  this.Before(function(callback) {
+    config = [];
+    actions = {};
+    lastEpoch = 0;
+    start = 0;
+    callback();
+  });
 
   this.Given(/^an epoch is added at "([^"]*)"$/, function(millis, callback) {
+    var epoch = parseInt(millis);
+    if (epoch > lastEpoch) {
+      lastEpoch = epoch;
+    }
     config.push({
-      epoch: millis
+      epoch: epoch
     });
     callback();
   });
 
   this.Given(/^the era is started$/, function(callback) {
     Consecution.initConfig(config);
+
+    start = new Date().getTime();
     Consecution.start();
+
     callback();
   });
 
-  this.When(/^an action named "([^"]*)" occurs at "([^"]*)"$/, function(name, delay, callback) {
+  this.When(/^an action named "([^"]*)" occurs after "([^"]*)"$/, function(name, delay, callback) {
     setTimeout(function() {
-      actions[name] = {
-        executed: false,
-        executedAt: 0
-      };
-
-      Consecution.queueEvent(function() {
-        actions[name].executed = true;
-        actions[name].executedAt = new Date().getTime();
+      Consecution.queueAction(function() {
+        actions[name] = {
+          executedAt: new Date().getTime()
+        };
       });
 
       callback();
-    }, delay);
+    }, parseInt(delay));
+  });
+
+  this.When(/^we wait "([^"]*)" after the last epoch$/, function(delay, callback) {
+    var terminate = lastEpoch + parseInt(delay);
+    setTimeout(function() {
+      callback();
+    }, terminate);
   });
 
   this.Then(/^the action named "([^"]*)" should be executed at "([^"]*)"$/, function(name, expected, callback) {
-    if (!actions.hasOwnProperty(name)) {
-      callback("No action named " + name + " has been executed");
-    } else if (!actions[name].executed) {
-      callback(name + " has not been executed at " + expected)
-    } else if (actions[name].executedAt !== expected) {
-      callback(name + " was executed at " + actions[name].executedAt + " and not at " + expected);
-    } else {
-      callback();
-    }
+    var expectedAt = parseInt(expected);
+
+    verifyActionHasExecuted(name,
+            expectedAt - tolerance,
+            expectedAt + tolerance, callback);
   });
 
   this.Then(/^the action named "([^"]*)" should be executed between "([^"]*)" and "([^"]*)"$/, function(name, expectedStart, expectedEnd, callback) {
-    if (!actions.hasOwnProperty(name)) {
-      callback("No action named " + name + " has been executed");
-    } else if (!actions[name].executed) {
-      callback(name + " has not been executed between " + expectedStart + " and " + expectedEnd)
-    } else if (actions[name].executedAt > expectedStart && actions[name].executedAt <= expectedEnd) {
-      callback(name + " was executed at " + actions[name].executedAt +
-          " and not between " + expectedStart + " and " + expectedEnd);
-    } else {
-      callback();
-    }
+    var startAt = parseInt(expectedStart),
+        endAt = parseInt(expectedEnd);
+
+    verifyActionHasExecuted(name, startAt - tolerance, endAt + tolerance, callback);
   });
+
+  function verifyActionHasExecuted(name, min, max, callback) {
+    if (actions.hasOwnProperty(name)) {
+      var executedAt = actions[name].executedAt - start;
+      if (executedAt > min && executedAt < max) {
+        callback();
+      } else {
+        callback(name + " was executed at " + executedAt + " and not between " + min + " and " + max);
+      }
+    } else {
+      callback("No action named " + name + " has been executed");
+    }
+  }
 };
 
 module.exports = commonSteps;
