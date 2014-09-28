@@ -1,7 +1,7 @@
 {
   "name": "consecution",
-  "version": "1.0.0",
-  "description": "Chained and interruptible events in Javascript",
+  "version": "1.0.1",
+  "description": "Chained and interruptable events in Javascript",
   "homepage": "https://github.com/ultraflynn/consecution",
   "author": "Matt Biggin",
   "license": "MIT",
