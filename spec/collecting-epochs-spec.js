@@ -1,6 +1,6 @@
 var Test = require("./test-utils");
 
-xdescribe("collecting epochs", function() {
+describe("collecting epochs", function() {
   beforeEach(function() {
     Test.reset();
   });
