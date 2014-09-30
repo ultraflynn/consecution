@@ -1,13 +1,14 @@
 var Consecution = require("../../lib/consecution");
 
 var commonSteps = function CommonSteps() {
-  var config, actions, lastEpoch, start, tolerance = 50;
+  var config, actions, lastEpoch, start, completionExecutedAt, tolerance = 50;
 
   this.Before(function(callback) {
     config = [];
     actions = {};
     lastEpoch = 0;
     start = 0;
+    completionExecutedAt = null;
     callback();
   });
 
@@ -39,6 +40,17 @@ var commonSteps = function CommonSteps() {
 
     start = new Date().getTime();
     Consecution.start();
+
+    callback();
+  });
+
+  this.Given(/^the era is started with a completion hook$/, function(callback) {
+    Consecution.initConfig(config);
+
+    start = new Date().getTime();
+    Consecution.start(function() {
+      completionExecutedAt: new Date().getTime()
+    });
 
     callback();
   });
@@ -75,6 +87,17 @@ var commonSteps = function CommonSteps() {
         endAt = parseInt(expectedEnd);
 
     verifyActionHasExecuted(name, startAt - tolerance, endAt + tolerance, callback);
+  });
+
+  this.Then(/^the completion hook should be executed at "([^"]*)"$/, function(expected, callback) {
+    var min = parseInt(expected) - tolerance, max = parseInt(expected) + tolerance;
+    if (!completionExecutedAt) {
+      callback("Completion hook was not executed");
+    } else if (completionExecutedAt > min && completionExecutedAt < max) {
+      callback();
+    } else {
+      callback("Completion hook was executed at " + completionExecutedAt + " and not between " + min + " and " + max);
+    }
   });
 
   function verifyActionHasExecuted(name, min, max, callback) {

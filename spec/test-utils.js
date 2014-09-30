@@ -1,26 +1,39 @@
 var Consecution = require("../lib/consecution");
 
 var firedActions;
+var completionHook;
 
 module.exports = {
   reset: function() {
     firedActions = {};
+    completionHook = null;
     jasmine.Clock.useMock();
   },
 
-  startConsecution: function(epochs, interruptible) {
+  addCompletionHook: function(hook) {
+    completionHook = hook;
+  },
+
+  startConsecution: function(epochs, interruptible, hooks) {
     var i, max = epochs.length, config = [];
     interruptible = interruptible ||
         Array.apply(null, new Array(epochs.length)).map(Boolean.prototype.valueOf, false);
+    hooks = hooks ||
+        Array.apply(null, new Array(epochs.length)).map(Function.prototype.valueOf, function() {});
 
     for (i = 0; i < max; i++) {
       config.push({
         epoch: epochs[i],
-        interruptible: interruptible[i]
+        interruptible: interruptible[i],
+        hook: hooks[i]
       });
     }
     Consecution.initConfig(config);
-    Consecution.start();
+    if (completionHook) {
+      Consecution.start(completionHook);
+    } else {
+      Consecution.start();
+    }
   },
 
   fireAction: function(name, delay) {
