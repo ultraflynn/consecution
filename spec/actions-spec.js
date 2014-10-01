@@ -22,6 +22,14 @@ describe("actions", function() {
       checkFireCount(1);
     });
 
+    it("should execute immediately a valid function", function() {
+      init([100], [true]);
+      consecution.queueAction(function() {
+        fireCount++;
+      });
+      checkFireCount(1);
+    });
+
     it("should execute an array of functions", function() {
       init([100]);
       var action = function() {
@@ -40,7 +48,47 @@ describe("actions", function() {
       checkFireCount(3);
     });
 
-    // TODO Execute immediate array of functions
+    it("should execute an action object", function() {
+      init([100]);
+      consecution.queueAction({
+        action: function() {
+          fireCount++;
+        }
+      });
+      checkFireCount(1);
+    });
+
+    it("should execute immediately an action object", function() {
+      init([100], [true]);
+      consecution.queueAction({
+        action: function() {
+          fireCount++;
+        }
+      });
+      checkFireCount(1);
+    });
+
+    it("should execute an array of actions objects", function() {
+      init([100]);
+      var action = {
+        action: function() {
+          fireCount++;
+        }
+      };
+      consecution.queueAction([action, action, action]);
+      checkFireCount(3);
+    });
+
+    it("should execute immediately array of actions objects", function() {
+      init([100], [true]);
+      var action = {
+        action: function() {
+          fireCount++;
+        }
+      };
+      consecution.queueAction([action, action, action]);
+      checkFireCount(3);
+    });
 
     function checkFireCount(expected) {
       jasmine.Clock.tick(50);
