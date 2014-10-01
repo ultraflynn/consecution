@@ -34,6 +34,7 @@ module.exports = {
     } else {
       Consecution.start();
     }
+    return Consecution;
   },
 
   fireAction: function(name, delay) {
@@ -63,5 +64,9 @@ module.exports = {
 
   checkActionHasFired: function(name) {
     expect(firedActions.hasOwnProperty(name)).toBe(true);
+  },
+
+  checkActionHasNotFired: function(name) {
+    expect(firedActions.hasOwnProperty(name)).toBe(false);
   }
 };

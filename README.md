@@ -83,3 +83,4 @@ queued at the next epoch are discarded.
 - 1.0.2 Add completion hook to end of era
 - ---^--- Add hook to epoch
 - ---^--- Add terminating actions which occur at an epoch but cause no more epochs to fire
+- ---^--- Support arrays of actions
