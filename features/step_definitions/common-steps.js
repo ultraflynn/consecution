@@ -1,14 +1,14 @@
 var Consecution = require("../../lib/consecution");
 
 var commonSteps = function CommonSteps() {
-  var config, actions, lastEpoch, start, completionExecutedAt, tolerance = 50;
+  var config, actions, lastEpoch, start, hookExecutedAt, tolerance = 50;
 
   this.Before(function(callback) {
     config = [];
     actions = {};
     lastEpoch = 0;
     start = 0;
-    completionExecutedAt = null;
+    hookExecutedAt = null;
     callback();
   });
 
@@ -49,7 +49,7 @@ var commonSteps = function CommonSteps() {
 
     start = new Date().getTime();
     Consecution.start(function() {
-      completionExecutedAt: new Date().getTime()
+      hookExecutedAt = new Date().getTime()
     });
 
     callback();
@@ -91,25 +91,27 @@ var commonSteps = function CommonSteps() {
 
   this.Then(/^the completion hook should be executed at "([^"]*)"$/, function(expected, callback) {
     var min = parseInt(expected) - tolerance, max = parseInt(expected) + tolerance;
-    if (!completionExecutedAt) {
-      callback("Completion hook was not executed");
-    } else if (completionExecutedAt > min && completionExecutedAt < max) {
-      callback();
+    if (hookExecutedAt) {
+      checkExecutionTime("Completion hook", hookExecutedAt, min, max, callback);
     } else {
-      callback("Completion hook was executed at " + completionExecutedAt + " and not between " + min + " and " + max);
+      callback("Completion hook was not executed");
     }
   });
 
   function verifyActionHasExecuted(name, min, max, callback) {
     if (actions.hasOwnProperty(name)) {
-      var executedAt = actions[name].executedAt - start;
-      if (executedAt > min && executedAt < max) {
-        callback();
-      } else {
-        callback(name + " was executed at " + executedAt + " and not between " + min + " and " + max);
-      }
+      checkExecutionTime(name, actions[name].executedAt, min, max, callback);
     } else {
       callback("No action named " + name + " has been executed");
+    }
+  }
+
+  function checkExecutionTime(name, executedAt, min, max, callback) {
+    var actual = executedAt - start;
+    if (actual > min && actual < max) {
+      callback();
+    } else {
+      callback(name + " was executed at " + actual + " and not between " + min + " and " + max);
     }
   }
 };

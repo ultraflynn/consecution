@@ -19,7 +19,8 @@ module.exports = {
     interruptible = interruptible ||
         Array.apply(null, new Array(epochs.length)).map(Boolean.prototype.valueOf, false);
     hooks = hooks ||
-        Array.apply(null, new Array(epochs.length)).map(Function.prototype.valueOf, function() {});
+        Array.apply(null, new Array(epochs.length)).map(Function.prototype.valueOf, function() {
+        });
 
     for (i = 0; i < max; i++) {
       config.push({
@@ -41,6 +42,17 @@ module.exports = {
     jasmine.Clock.tick(delay);
     Consecution.queueAction(function() {
       firedActions[name] = true;
+    });
+  },
+
+  fireActionWithTermination: function(name, delay, termination) {
+    jasmine.Clock.tick(delay);
+    Consecution.queueAction({
+      action: function() {
+        firedActions[name] = true;
+      },
+
+      terminating: termination
     });
   },
 

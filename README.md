@@ -74,13 +74,13 @@ queued at the next epoch are discarded.
 ## Backlog
 
 - Validate the config and provide reasonable feedback when incorrectly specified
-- Add support for terminating actions
-- Add support for poison actions
+- Add test for arrays of actions holding a terminating action
+- Add acceptance tests for terminating actions
 
 ## Version History
 - 1.0.0 Add support for collecting epochs
 - 1.0.1 Add support for interruptible periods
 - 1.0.2 Add completion hook to end of era
 - ---^--- Add hook to epoch
-- ---^--- Add terminating actions which occur at an epoch but cause no more epochs to fire
+- ---^--- Add support for terminating actions
 - ---^--- Support arrays of actions

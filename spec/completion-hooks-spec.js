@@ -57,4 +57,31 @@ describe("completion hook", function() {
 
     expect(epochHookFired).toBe(true);
   });
+
+  it("should fire at the end of a terminated era", function() {
+    var completionHookFired = false;
+
+    Test.addCompletionHook(function() {
+      completionHookFired = true;
+    });
+    Test.startConsecution([100], [true]);
+    Test.fireActionWithTermination("action", 50, true);
+
+    expect(completionHookFired).toBe(true);
+    jasmine.Clock.tick(50);
+  });
+
+  it("should fire at the end of a terminated epoch", function() {
+    var epochHookFired = false;
+
+    Test.startConsecution([100], [false], [function() {
+      epochHookFired = true;
+    }]);
+
+    Test.fireActionWithTermination("action", 50, true);
+    Test.checkActionHasFired("action");
+
+    expect(epochHookFired).toBe(true);
+    jasmine.Clock.tick(50);
+  });
 });
