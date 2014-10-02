@@ -72,8 +72,14 @@ an interruptible period causes the action to be executed and the era ended. Any 
 queued at the next epoch are discarded.
 
 ## Backlog
-- Add completion hook to end of era
+
+- Validate the config and provide reasonable feedback when incorrectly specified
+- Add acceptance tests for terminating actions
 
 ## Version History
 - 1.0.0 Add support for collecting epochs
 - 1.0.1 Add support for interruptible periods
+- 1.0.2 Add completion hook to end of era
+- ---^--- Add hook to epoch
+- ---^--- Add support for terminating actions
+- ---^--- Support arrays of actions

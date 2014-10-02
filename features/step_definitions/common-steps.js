@@ -1,13 +1,14 @@
 var Consecution = require("../../lib/consecution");
 
 var commonSteps = function CommonSteps() {
-  var config, actions, lastEpoch, start, tolerance = 50;
+  var config, actions, lastEpoch, start, hookExecutedAt, tolerance = 50;
 
   this.Before(function(callback) {
     config = [];
     actions = {};
     lastEpoch = 0;
     start = 0;
+    hookExecutedAt = null;
     callback();
   });
 
@@ -39,6 +40,17 @@ var commonSteps = function CommonSteps() {
 
     start = new Date().getTime();
     Consecution.start();
+
+    callback();
+  });
+
+  this.Given(/^the era is started with a completion hook$/, function(callback) {
+    Consecution.initConfig(config);
+
+    start = new Date().getTime();
+    Consecution.start(function() {
+      hookExecutedAt = new Date().getTime()
+    });
 
     callback();
   });
@@ -77,16 +89,29 @@ var commonSteps = function CommonSteps() {
     verifyActionHasExecuted(name, startAt - tolerance, endAt + tolerance, callback);
   });
 
+  this.Then(/^the completion hook should be executed at "([^"]*)"$/, function(expected, callback) {
+    var min = parseInt(expected) - tolerance, max = parseInt(expected) + tolerance;
+    if (hookExecutedAt) {
+      checkExecutionTime("Completion hook", hookExecutedAt, min, max, callback);
+    } else {
+      callback("Completion hook was not executed");
+    }
+  });
+
   function verifyActionHasExecuted(name, min, max, callback) {
     if (actions.hasOwnProperty(name)) {
-      var executedAt = actions[name].executedAt - start;
-      if (executedAt > min && executedAt < max) {
-        callback();
-      } else {
-        callback(name + " was executed at " + executedAt + " and not between " + min + " and " + max);
-      }
+      checkExecutionTime(name, actions[name].executedAt, min, max, callback);
     } else {
       callback("No action named " + name + " has been executed");
+    }
+  }
+
+  function checkExecutionTime(name, executedAt, min, max, callback) {
+    var actual = executedAt - start;
+    if (actual > min && actual < max) {
+      callback();
+    } else {
+      callback(name + " was executed at " + actual + " and not between " + min + " and " + max);
     }
   }
 };

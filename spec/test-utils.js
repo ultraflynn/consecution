@@ -1,32 +1,77 @@
 var Consecution = require("../lib/consecution");
 
 var firedActions;
+var completionHook;
 
 module.exports = {
   reset: function() {
     firedActions = {};
+    completionHook = null;
     jasmine.Clock.useMock();
   },
 
-  startConsecution: function(epochs, interruptible) {
+  addCompletionHook: function(hook) {
+    completionHook = hook;
+  },
+
+  startConsecution: function(epochs, interruptible, hooks) {
     var i, max = epochs.length, config = [];
     interruptible = interruptible ||
         Array.apply(null, new Array(epochs.length)).map(Boolean.prototype.valueOf, false);
+    hooks = hooks ||
+        Array.apply(null, new Array(epochs.length)).map(Function.prototype.valueOf, function() {
+        });
 
     for (i = 0; i < max; i++) {
       config.push({
         epoch: epochs[i],
-        interruptible: interruptible[i]
+        interruptible: interruptible[i],
+        hook: hooks[i]
       });
     }
     Consecution.initConfig(config);
-    Consecution.start();
+    if (completionHook) {
+      Consecution.start(completionHook);
+    } else {
+      Consecution.start();
+    }
+    return Consecution;
   },
 
   fireAction: function(name, delay) {
     jasmine.Clock.tick(delay);
     Consecution.queueAction(function() {
       firedActions[name] = true;
+    });
+  },
+
+  fireActionWithTermination: function(name, delay, termination) {
+    jasmine.Clock.tick(delay);
+    Consecution.queueAction({
+      action: function() {
+        firedActions[name] = true;
+      },
+
+      terminating: termination
+    });
+  },
+
+  fireArrayActionWithTermination: function(name, delay, termination) {
+    jasmine.Clock.tick(delay);
+    Consecution.queueAction({
+      action: [
+        function() {
+          firedActions[name + "-1"] = true;
+        },
+        function() {
+          firedActions[name + "-2"] = true;
+        },
+        function() {
+          firedActions[name + "-3"] = true;
+        }
+      ],
+
+      terminating: termination
     });
   },
 
@@ -50,5 +95,9 @@ module.exports = {
 
   checkActionHasFired: function(name) {
     expect(firedActions.hasOwnProperty(name)).toBe(true);
+  },
+
+  checkActionHasNotFired: function(name) {
+    expect(firedActions.hasOwnProperty(name)).toBe(false);
   }
 };
