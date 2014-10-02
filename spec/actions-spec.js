@@ -108,9 +108,24 @@ describe("actions", function() {
       Test.startConsecution([100]);
       Test.fireAction("action-one", 30);
       Test.fireAction("action-two", 30);
-      Test.fireActionWithTermination("non-terminating-action", 30, true);
+      Test.fireActionWithTermination("terminating-action", 30, true);
 
-      Test.checkActionHasFired("non-terminating-action");
+      Test.checkActionHasFired("terminating-action");
+      Test.checkActionHasNotFired("action-one");
+      Test.checkActionHasNotFired("action-two");
+
+      jasmine.Clock.tick(10);
+    });
+
+    it("should execute array of object actions and stop other actions from executing when terminating", function() {
+      Test.startConsecution([100]);
+      Test.fireAction("action-one", 30);
+      Test.fireAction("action-two", 30);
+      Test.fireArrayActionWithTermination("terminating-action", 30, true);
+
+      Test.checkActionHasFired("terminating-action-1");
+      Test.checkActionHasFired("terminating-action-2");
+      Test.checkActionHasFired("terminating-action-3");
       Test.checkActionHasNotFired("action-one");
       Test.checkActionHasNotFired("action-two");
 

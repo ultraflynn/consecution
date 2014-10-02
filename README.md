@@ -74,7 +74,6 @@ queued at the next epoch are discarded.
 ## Backlog
 
 - Validate the config and provide reasonable feedback when incorrectly specified
-- Add test for arrays of actions holding a terminating action
 - Add acceptance tests for terminating actions
 
 ## Version History

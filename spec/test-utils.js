@@ -56,6 +56,25 @@ module.exports = {
     });
   },
 
+  fireArrayActionWithTermination: function(name, delay, termination) {
+    jasmine.Clock.tick(delay);
+    Consecution.queueAction({
+      action: [
+        function() {
+          firedActions[name + "-1"] = true;
+        },
+        function() {
+          firedActions[name + "-2"] = true;
+        },
+        function() {
+          firedActions[name + "-3"] = true;
+        }
+      ],
+
+      terminating: termination
+    });
+  },
+
   checkAction: function(name, delay) {
     this.checkActions([name], delay);
   },
